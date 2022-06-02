@@ -1,3 +1,4 @@
+from cv2 import waitKey
 from Hand_Tracking_Module_cvzone_custom import HandDetector
 import cv2
 
@@ -22,7 +23,6 @@ while True:
         fingers1 = detector.fingersUp(hand1)
 
         cv2.circle(img, (centerPoint1[0], centerPoint1[1]), 8, (255, 0, 255), cv2.FILLED) # draw center point
-        print(lmList1)
 
         if len(hands) == 2:
             # Hand 2
@@ -40,7 +40,10 @@ while True:
             # length, info, img = detector.findDistance(lmList1[8], lmList2[8], img)  # with draw
             # length, info = detector.findDistance(lmList1[8], lmList2[8])  # with draw
     # Display
-    cv2.imshow("Image", img)
+    if waitKey(1) & 0xff == ord('q'):
+        break
+
+    cv2.imshow("Image (Press q to quit", img)
     cv2.waitKey(1)
 cap.release()
 cv2.destroyAllWindows()
