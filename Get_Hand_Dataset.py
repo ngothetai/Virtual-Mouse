@@ -62,4 +62,18 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     cap.release()
     cv2.destroyAllWindows()
 
-CaptureImage("Move_mouse", "C:/Users/theta/OneDrive - nogdev/Desktop/Work/Python/Product_HIT/Datasets/Hand_Gestures/", 50, delay_count=10)
+if __name__ == '__main__':
+    import os 
+
+    directory = "Move_mouse"
+
+    parent_dir = "D:/"
+
+    path = os.path.join(parent_dir, directory)
+
+    try:
+        os.makedirs(path, exist_ok = True)
+    except OSError as error:
+        print("Directory '%s' can not be created" % directory)
+
+    CaptureImage("Move_mouse", "D:", 50, delay_count=10)
