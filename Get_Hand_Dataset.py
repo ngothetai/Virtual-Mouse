@@ -13,9 +13,9 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
         # Get image frame
         success, img_cam = cap.read()
         img = img_cam.copy()
-        # img = cv2.flip(img, 1)
+        img = cv2.flip(img, 1)
         # Find the hand and its landmarks
-        hands, drawed_img = detector.findHands(img)  # with draw
+        hands, drawed_img = detector.findHands(img, flipType=False)  # with draw
         # hands = detector.findHands(img, draw=False)  # without draw
 
         if hands:
@@ -58,11 +58,10 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
             #     # length, info, img = detector.findDistance(lmList1[8], lmList2[8], img)  # with draw
             #     # length, info = detector.findDistance(lmList1[8], lmList2[8])  # with draw
         # Display
+        cv2.imshow("Image (Press q to quit)", drawed_img)
+
         if waitKey(1) & 0xff == ord('q'):
             break
-
-        cv2.imshow("Image (Press q to quit)", drawed_img)
-        cv2.waitKey(1)
     cap.release()
     cv2.destroyAllWindows()
 

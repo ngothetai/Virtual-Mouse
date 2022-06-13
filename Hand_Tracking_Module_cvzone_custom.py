@@ -1,9 +1,3 @@
-"""
-Hand Tracking Module
-By: Computer Vision Zone
-Website: https://www.computervision.zone/
-"""
-
 import cv2
 import mediapipe as mp
 import math
@@ -161,8 +155,9 @@ def main():
     while True:
         # Get image frame
         success, img = cap.read()
+        img = cv2.flip(img, 1)
         # Find the hand and its landmarks
-        hands, img = detector.findHands(img)  # with draw
+        hands, img = detector.findHands(img, flipType=False)  # with draw
         # hands = detector.findHands(img, draw=False)  # without draw
 
         if hands:
@@ -188,10 +183,14 @@ def main():
                 # Find Distance between two Landmarks. Could be same hand or different hands
                 length, info, img = detector.findDistance(lmList1[8][0:2], lmList2[8][0:2], img)  # with draw
                 # length, info = detector.findDistance(lmList1[8], lmList2[8])  # with draw
+        
         # Display
         cv2.imshow("Image", img)
-        cv2.waitKey(1)
-
+        
+        if cv2.waitKey(1) & 0xff == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
