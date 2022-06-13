@@ -1,3 +1,5 @@
+import os
+
 def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     from cv2 import waitKey
     from Hand_Tracking_Module_cvzone_custom import HandDetector
@@ -30,6 +32,7 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
 
             #Save croped image
             if count == delay_count:
+                while os.path.exists(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg"): number_Image += 1
                 img_crop = img_cam[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
                 cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
                 # cv2.imshow("Image (Press q to quit)", img_crop)
@@ -62,9 +65,7 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     cap.release()
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    import os 
-
+if __name__ == '__main__': 
     directory = "Move_mouse"
 
     parent_dir = "D:/"
