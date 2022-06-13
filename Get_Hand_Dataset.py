@@ -1,11 +1,10 @@
 import os
+from cv2 import waitKey
+from Hand_Tracking_Module_cvzone_custom import HandDetector
+import cv2
+import matplotlib.pyplot as plt
 
 def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
-    from cv2 import waitKey
-    from Hand_Tracking_Module_cvzone_custom import HandDetector
-    import cv2
-    import matplotlib.pyplot as plt
-
     cap = cv2.VideoCapture(0)
     detector = HandDetector(detectionCon=0.8, maxHands=1)
     count = 0
@@ -34,10 +33,12 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
             if count == delay_count:
                 while os.path.exists(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg"): number_Image += 1
                 img_crop = img_cam[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
-                cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
-                # cv2.imshow("Image (Press q to quit)", img_crop)
+                try:
+                    cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
+                    number_Image += 1
+                except:
+                    print("Your action is so fast!")
                 count = 0
-                number_Image += 1
             count += 1
             
             cv2.circle(drawed_img, (centerPoint1[0], centerPoint1[1]), 8, (255, 0, 255), cv2.FILLED) # draw center point
