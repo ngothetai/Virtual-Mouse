@@ -91,9 +91,9 @@ class HandDetector:
                     cv2.putText(img,myHand["type"],(bbox[0] - 30, bbox[1] - 30),cv2.FONT_HERSHEY_PLAIN,
                                 2,(255, 0, 255),2)
         if draw:
-            return allHands,img
+            return allHands, img
         else:
-            return allHands
+            return allHands, bbox
 
     def fingersUp(self,myHand):
         """
