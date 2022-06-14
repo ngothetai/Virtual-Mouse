@@ -12,10 +12,10 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     while True:
         # Get image frame
         success, img_cam = cap.read()
-        img = img_cam.copy()
-        img = cv2.flip(img, 1)
+        
+        img = cv2.flip(img_cam, 1)
         # Find the hand and its landmarks
-        hands, drawed_img = detector.findHands(img, flipType=False)  # with draw
+        hands, drawed_img = detector.findHands(img.copy(), flipType=False)  # with draw
         # hands = detector.findHands(img, draw=False)  # without draw
 
         if hands:
@@ -32,7 +32,7 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
             #Save croped image
             if count == delay_count:
                 while os.path.exists(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg"): number_Image += 1
-                img_crop = img_cam[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
+                img_crop = img[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
                 try:
                     cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
                     number_Image += 1
