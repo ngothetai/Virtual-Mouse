@@ -1,9 +1,10 @@
-def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
-    from cv2 import waitKey
-    from Hand_Tracking_Module_cvzone_custom import HandDetector
-    import cv2
-    import matplotlib.pyplot as plt
+import os
+from cv2 import waitKey
+from Hand_Tracking_Module_cvzone_custom import HandDetector
+import cv2
+import matplotlib.pyplot as plt
 
+def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     cap = cv2.VideoCapture(0)
     detector = HandDetector(detectionCon=0.8, maxHands=1)
     count = 0
@@ -11,10 +12,11 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     while True:
         # Get image frame
         success, img_cam = cap.read()
-        img = img_cam.copy()
-        # img = cv2.flip(img, 1)
+        
+        # img = cv2.flip(img_cam, 1)
+        img = img_cam
         # Find the hand and its landmarks
-        hands, drawed_img = detector.findHands(img)  # with draw
+        hands, drawed_img = detector.findHands(img.copy(), flipType=True)  # with draw
         # hands = detector.findHands(img, draw=False)  # without draw
 
         if hands:
@@ -30,11 +32,14 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
 
             #Save croped image
             if count == delay_count:
-                img_crop = img_cam[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
-                cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
-                # cv2.imshow("Image (Press q to quit)", img_crop)
+                while os.path.exists(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg"): number_Image += 1
+                img_crop = img[bbox1[1]-instance_bonus:bbox1[1]+bbox1[3]+instance_bonus, bbox1[0]-instance_bonus:bbox1[0]+bbox1[2]+instance_bonus]
+                try:
+                    cv2.imwrite(folder_name + '/' + name_gesture + '/' + str(number_Image) + ".jpg", img_crop)
+                    number_Image += 1
+                except:
+                    print("Your action is so fast!")
                 count = 0
-                number_Image += 1
             count += 1
             
             cv2.circle(drawed_img, (centerPoint1[0], centerPoint1[1]), 8, (255, 0, 255), cv2.FILLED) # draw center point
@@ -54,12 +59,23 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
             #     # length, info, img = detector.findDistance(lmList1[8], lmList2[8], img)  # with draw
             #     # length, info = detector.findDistance(lmList1[8], lmList2[8])  # with draw
         # Display
+        cv2.imshow("Image (Press q to quit)", drawed_img)
+
         if waitKey(1) & 0xff == ord('q'):
             break
-
-        cv2.imshow("Image (Press q to quit)", drawed_img)
-        cv2.waitKey(1)
     cap.release()
     cv2.destroyAllWindows()
 
-CaptureImage("Move_mouse", "C:/Users/theta/OneDrive - nogdev/Desktop/Work/Python/Product_HIT/Datasets/Hand_Gestures/", 50, delay_count=10)
+if __name__ == '__main__': 
+    directory = "Double_Left_mouse"
+
+    parent_dir = "C:/Users/theta/OneDrive - nogdev/Desktop/Work/Python/Product_HIT/Datasets/Hand_Gestures/train/"
+
+    path = os.path.join(parent_dir, directory)
+
+    try:
+        os.makedirs(path, exist_ok = True)
+    except OSError as error:
+        print("Directory '%s' can not be created" % directory)
+
+    CaptureImage(directory, parent_dir, 50, delay_count=10)
