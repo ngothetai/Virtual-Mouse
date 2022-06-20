@@ -67,7 +67,7 @@ def CaptureImage(name_gesture, folder_name, instance_bonus, delay_count):
     cv2.destroyAllWindows()
 
 if __name__ == '__main__': 
-    directory = "Double_Left_mouse"
+    directory = "Scroll_mouse"
 
     parent_dir = "C:/Users/theta/OneDrive - nogdev/Desktop/Work/Python/Product_HIT/Datasets/Hand_Gestures/train/"
 
